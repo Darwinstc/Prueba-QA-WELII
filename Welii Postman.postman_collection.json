@@ -1,0 +1,125 @@
+{
+  "info": {
+    "_postman_id": "d5fadf39-2012-43b0-b05d-c61bb6253c8f",
+    "name": "Welii Postman",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58826146",
+    "_collection_link": "https://go.postman.co/collection/58826146-d5fadf39-2012-43b0-b05d-c61bb6253c8f?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "03 - Listar",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\npm.test(\"El status code es 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"La respuesta contiene una lista de productos\", function () {\n    const body = pm.response.json();\n\n    pm.expect(body.products).to.be.an(\"array\");\n    pm.expect(body.products.length).to.be.above(0);\n});\n\npm.test(\"Los productos tienen la estructura esperada\", function () {\n    const body = pm.response.json();\n\n    body.products.forEach(function (product) {\n        pm.expect(product).to.have.property(\"id\");\n        pm.expect(product.id).to.be.a(\"number\");\n\n        pm.expect(product).to.have.property(\"title\");\n        pm.expect(product.title).to.be.a(\"string\");\n\n        pm.expect(product).to.have.property(\"price\");\n        pm.expect(product.price).to.be.a(\"number\");\n    });\n});\n\npm.test(\"La paginación tiene la estructura correcta\", function () {\n    const body = pm.response.json();\n\n    pm.expect(body.total).to.be.a(\"number\");\n    pm.expect(body.skip).to.be.a(\"number\");\n    pm.expect(body.limit).to.be.a(\"number\");\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dummyjson.com/products",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "01 - Login exitoso",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\npm.test(\"El status code es 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"La respuesta contiene un token\", function () {\n    const body = pm.response.json();\n\n    pm.expect(body.accessToken).to.be.a(\"string\");\n    pm.expect(body.accessToken).to.not.be.empty;\n});\n\npm.test(\"La respuesta contiene datos del usuario\", function () {\n    const body = pm.response.json();\n\n    pm.expect(body).to.have.property(\"id\");\n    pm.expect(body).to.have.property(\"username\", \"emilys\");\n});\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\"username\": \"emilys\",\n\"password\": \"emilyspass\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dummyjson.com/auth/login",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "02 - Login fallido",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\npm.test(\"El status code es 400\", function () {\n    pm.response.to.have.status(400);\n});\n\npm.test(\"Se informa el error de autenticación\", function () {\n    const body = pm.response.json();\n\n    pm.expect(body).to.have.property(\"message\");\n    pm.expect(body.message).to.be.a(\"string\");\n    pm.expect(body.message.length).to.be.above(0);\n});\n\npm.test(\"No se devuelve un token de acceso\", function () {\n    const body = pm.response.json();\n\n    pm.expect(body.accessToken).to.be.undefined;\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"emilys\",\n  \"password\": \"claveincorrecta123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dummyjson.com/auth/login",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    }
+  ]
+}
